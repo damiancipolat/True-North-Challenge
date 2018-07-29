@@ -14,6 +14,7 @@ const Restaurant = db.define('restaurant',{
   name      : Sequelize.STRING,
   address   : Sequelize.STRING,
   phone     : Sequelize.STRING,
+  email     : Sequelize.STRING,
   latitude  : Sequelize.FLOAT,
   longitude : Sequelize.FLOAT,
   rate      : Sequelize.INTEGER

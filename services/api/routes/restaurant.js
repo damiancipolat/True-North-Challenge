@@ -42,22 +42,19 @@ const calcRate = async (restaurantId)=>{
 	try{
 
 		//Get all the rates.
-		let rates = await models.Rate.findAll({where: {restaurant_id:restaurantId}});
+		let rates = await models.Rate.findAll({raw:true,where: {restaurant_id:restaurantId}});
 
 		if (rates!=null){
+	
+			let rateSum = 0;
 
-			//Sum all the rates of the restaurant.
-			let rateSum = rates.reduce((rateLast,rateActual) => {
-
-				return ((rateLast.dataValues!=undefined)?rateLast.dataValues.value:0)+
-								((rateActual.dataValues!=undefined)?rateActual.dataValues.value:0);
-
-			});
+			//Sum all the rates of the restaurant.		
+			rates.forEach((rate) => rateSum+=rate.value);			
 
 			//Calc the rate average.
-			return Math.floor(rateSum/rates.length)
+			return Math.floor(rateSum/rates.length);
 
-		} else 
+		} else
 			return null;
 
 	} catch(error){
@@ -82,12 +79,18 @@ const newRate = async (restaurantId,userId,rateValue)=>{
 		if ((user!=null)&&(store!=null)){
 
 			//Create new rate.
-			await models.Rate.create({value:rateValue, restaurant_id:restaurantId, userid:userId});
+			await models.Rate.create({value:rateValue, restaurant_id:restaurantId, user_id:userId});
 
-			//Calculate new rate.
+			//Calculate the new rate.
 			let newRate = await calcRate(restaurantId);
 
-			console.log(rewRate);
+			if (newRate!=null){
+
+				//Update the restaunt rate.
+				await models.Restaurant.update({rate:newRate},{where:{id:restaurantId}});
+
+				return newRate;
+			}			
 
   	} else
   		console.log('err',user,store);
@@ -130,7 +133,7 @@ router.post('/rate/',(req,res)=>{
 	if ((req.body.restaurantId!=null)&&(req.body.userId)&&(req.body.rateValue)){
 
 		//Find by rate.
-		newRate(req.body.restaurantId,req.body.userId)
+		newRate(req.body.restaurantId,req.body.userId,req.body.rateValue)
 			.then((data) => res.status(200).json({"restaurants":data}))
 			.catch((err) => res.status(500).json(err));
 

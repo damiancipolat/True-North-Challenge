@@ -11,7 +11,8 @@ const connection = ()=>{
 		config.database.pwd, {
   	host    : config.database.host,
   	dialect : config.database.type,
-	  operatorsAliases : false
+	  operatorsAliases : false,
+	  logging : config.debug
 	});
 
 }
