@@ -1,0 +1,18 @@
+{
+	"database":{
+		"user":"snigmgei",
+		"db"  :"snigmgei",
+		"pwd" :"BpbVMSMR4JlTQ-fGjBjhpiVxOlKanmHr",
+		"host":"baasu.db.elephantsql.com",
+		"type":"postgres"
+	},
+	"services":{
+		"api":{
+			"ip"   : "127.0.0.1",
+			"port" : 8080
+		},
+		"notifications":{
+
+		}
+	}
+}
