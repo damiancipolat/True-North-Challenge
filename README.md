@@ -1,7 +1,7 @@
 # True-North-Challenge
 My solution for the True North Node.js Sr - Challenge
 
-- To view architecture **[diagrams]**
+- To view architecture **[diagrams]**.
 
 [diagrams]:https://github.com/damiancipolat/True-North-Challenge/blob/master/diagrams.md
 
