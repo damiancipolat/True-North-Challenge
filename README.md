@@ -2,6 +2,10 @@
 My solution for the True North Node.js Sr - Challenge
 
 ### Architecture diagrams:
+- *Diagram:*
+![N|Solid](https://github.com/damiancipolat/True-North-Challenge/blob/master/doc/basic-diagram.png?raw=true)
+
+- *AWS:*
 ![N|Solid](https://github.com/damiancipolat/True-North-Challenge/blob/master/doc/aws-diagram.png?raw=true)
 
 ### Install:
