@@ -1,162 +1,179 @@
-const assert = require('assert');
-const config = require('../lib/config.js');
-const db     = require('../models/db.js');
+const assert  = require('assert');
+const config  = require('../config/config.json');
 
-const test = (config)=>{
+global.config       = config;
+global.config.debug = false;
 
-  global.config = config;  
+const db       = require('../models/db.js').connection();
+const models   = require('../models/models.js');
+const mapsApi  = require('../lib/mapsApi/baseApi.js')
+const Point    = require('../lib/mapsApi/point.js');
+const rabbitmq = require('../lib/rabbit.js');
 
-  describe("Test cases", ()=>{
+describe("Api Rest test cases", ()=>{
 
-    //Test db connection.
-    describe("DB CONNECTION", ()=>{
+  //Test db connection.
+  describe("Database test", ()=>{
 
-      it("Test db", (done)=>{
+    it("Connecting", (done)=>{
 
-        db.authenticate()
-          .then((status) =>{
-            assert(true);
-            done();
-          })
-          .catch((err) =>{
-            assert(false);
-            done();            
-          });
-
-      });
-
-    });
-
-  });
-
-}
-
-config.getConfig('./config/config.json')
-  .then((config) => test(config))
-  .catch((err)   => console.log('Error loading config.'));
-
-
-/*
-const config = require('../utils/config.js');
-const db     = require('../lib/db/db.js');
-const Tweet  = require('../lib/twitterEvents.js');
-
-//Define global config.
-global.settings = config.getConfig('./settings.json');
-
-//Test case.
-describe("Test cases", ()=>{
-
-  //Test config module.
-  describe("Config module", ()=>{
-
-    it("Load server settings", (done)=>{
-
-      assert(config.getConfig('./settings.json')!=null);
-      done();
-
-    });
-
-  });
-
-  //Databse module.
-  describe("Database module", ()=>{
-
-    //Enable connection.
-    it("Try connection", (done)=>{
-
-      db.connect(global.settings.bd.url).then((bdConex)=>{
-
-        assert(true);
-        done();
-        bdConex.close();
-
-      }).catch((err)=>{
-
-        assert(false);
-        done();
-
-      });
-
-    });
-
-    //Save tweet.
-    it("Save tweet", (done)=>{
-
-      //Connect to mongodb.
-      db.connect(global.settings.bd.url).then((bdConex)=>{
-
-        let tweet = {"date" : "2018-03-12",
-                     "id"   : 111111,
-                     "text" : "Mocha Test",
-                     "user" : "Test JS"};
-
-        //Save tweet.
-        db.saveTweet(bdConex,tweet).then((result)=>{
-          bdConex.close();
+      db.authenticate()
+        .then((status) =>{
           assert(true);
           done();
-        }).catch((err)=>{
-          bdConex.close();
+        })
+        .catch((err) =>{
+          assert(false);
+          done();            
+        });
+
+    });
+
+    it("Model check - USER", (done)=>{
+
+      models.User.findOne()
+        .then((user)=>{
+          assert(user!=null);
+          done();
+        })
+        .catch((err)=>{
           assert(false);
           done();
         });
 
-      }).catch((err)=>{
-        assert(false);
-        done();
-      });
-
     });
 
-    //Find tweets.
-    it("Find tweets", (done)=>{
+    it("Model check - RESTAURANT", (done)=>{
 
-      //Connect to mongodb.
-      db.connect(global.settings.bd.url).then((bdConex)=>{
-
-        //Find tweet.
-        db.findTweets(bdConex,{user:'Pliny'}).then((result)=>{
-          bdConex.close();
-          assert(true);
+      models.Restaurant.findOne()
+        .then((store)=>{
+          assert(store!=null);
           done();
-        }).catch((err)=>{
-          bdConex.close();
+        })
+        .catch((err)=>{
           assert(false);
           done();
         });
 
-      }).catch((err)=>{
-        assert(false);
-        done();
-      });
+    });
+
+    it("Model check - MEAL", (done)=>{
+
+      models.Meal.findOne()
+        .then((meal)=>{
+          assert(meal!=null);
+          done();
+        })
+        .catch((err)=>{
+          assert(false);
+          done();
+        });
+
+    });
+
+    it("Model create - RATE", (done)=>{
+
+      models.Rate.create({
+        value : 10,
+        restaurant_id : 1,
+        user_id : 1
+      })
+        .then((add)=>{
+          assert(add!=null);
+          done();
+        })
+        .catch((err)=>{
+          assert(false);
+          done();
+        });
+
+    });
+
+    it("Model create - ORDER", (done)=>{
+
+      models.Order.create({
+        address   : 'test street', 
+        latitude  : 0,
+        longitude : 0, 
+        user_id   : 1,
+        restaurant_id : 1,
+        eta : '10 min',
+        cost : 100
+      })
+        .then((add)=>{
+          assert(add!=null);
+          done();
+        })
+        .catch((err)=>{
+          assert(false);
+          done();
+        });
+
+    });
+
+    it("Model create - ORDER_MEAL", (done)=>{
+
+      models.OrderMeal.create({
+        order_id : 1, 
+        meal_id  : 1
+      })
+        .then((add)=>{
+          assert(add!=null);
+          done();
+        })
+        .catch((err)=>{
+          assert(false);
+          done();
+        });
 
     });
 
   });
 
-  //Twitter module.
-  describe("Twitter module", ()=>{
+  //Test Google Maps API.
+  describe("Google Maps Api", ()=>{
 
-    //Connect to twitter api.
-    it("Connect to Twitter API", (done)=>{
+    it("ETA - Calc", (done)=>{
 
-      try{
+      //Some randoms points.
+      let origin = new Point(-34.6108573,-58.4149374);
+      let destiny= new Point(-34.860601,-58.3959097);
 
-        const tweetEvents = new Tweet();
+      //Instance api maps.
+      let api   = new mapsApi('googleMaps',origin,destiny,config.services.api.mapsKey);
 
-        tweetEvents.trackWord(tweetWord,()=>{
-          assert(true);
+      api.calc()
+        .then((eta) =>{
+          console.log(eta);
+          assert(eta!='');
           done();
+        })
+        .catch((err) =>{
+          assert(false);
+          done();            
         });
-
-      } catch(err){        
-        assert(false);
-        done();
-      }
 
     });
 
-  }); 
+  });
 
-});*/
+  //RabbitMQ .
+  describe("RabbitMQ", ()=>{
+
+    it("Test connection", (done)=>{
+
+      rabbitmq.connection(config.rabbitmq.url)
+        .then((result) =>{
+          assert(result!=null);
+          done();
+        })
+        .catch((err) =>{
+          assert(false);
+          done();            
+        });
+
+    });
+
+  });
+
+});
