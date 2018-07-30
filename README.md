@@ -1,7 +1,8 @@
 # True-North-Challenge
 My solution for the True North Node.js Sr - Challenge
 
-### Install:
+### Architecture diagrams:
+![N|Solid](https://github.com/damiancipolat/True-North-Challenge/blob/master/doc/aws-diagram.png?raw=true)
 
 ### Install:
 
