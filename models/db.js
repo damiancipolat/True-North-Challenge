@@ -1,7 +1,6 @@
 const Sequelize = require('Sequelize');
-const configLib = require('../lib/config.js');
 
-let config = configLib.getConfig('./config/config.json');
+const config = global.config;
 
 const connection = ()=>{
 

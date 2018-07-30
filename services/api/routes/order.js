@@ -1,12 +1,14 @@
 const express = require('express');
 const router  = express.Router();
 
+//Include module
 const models  = require('../../../models/models.js');
 
+//Custom libs
+const error   = require('../../../lib/error.js');
+const promise = require('../../../lib/promise.js');
 const mapsApi = require('../../../lib/mapsApi/baseApi.js');
 const point   = require('../../../lib/mapsApi/point.js');
-
-Promise.Complete = r => Promise.all(r.map(p => p.catch ? p.catch(e => e) : p));
 
 //Validate format.
 const validRequest = (req)=>{
@@ -43,7 +45,7 @@ const newOrderMeal = (orderId,mealList)=>{
 	let prom = [];
 
 	mealList.forEach((mealId)=>{
-		console.log('save',orderId,mealId);
+
 		prom.push(models.OrderMeal.create({
 			order_id :orderId,
 			meal_id  :mealId
@@ -101,10 +103,10 @@ const newOrder = async (data)=>{
 			}
 
   	} else
-  		console.log('err**********',user,store);
+  			return error.msg('BADREQ');
 
 	}catch(error){
-		throw new Error('request error');
+		throw new Error(error.msg('QUERY'));
 	}
 
 }
@@ -126,7 +128,7 @@ router.get('/:id',(req,res)=>{
 
 	getOrder(req.params.id)
 		.then((data) => res.status(200).json({"order":data}))
-		.catch((err) => res.status(500).json(err));
+		.catch((err) => res.status(500).json(error.msg('API')));
 
 })
 
@@ -139,10 +141,10 @@ router.post('/',(req,res)=>{
 		//Process save order.
 		newOrder(req.body)
 			.then((data) => res.status(200).json({"order":data}))
-			.catch((err) => res.status(500).json(err));		
+			.catch((err) => res.status(500).json(error.msg('API')));		
 
 	} else
-			res.status(400).json({"err":"error1111"});
+			res.status(400).json(error.msg('BADREQ'));
 
 });
 

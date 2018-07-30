@@ -1,6 +1,8 @@
-const express     = require('express');
-const router      = express.Router();
-const models      = require('../../../models/models.js');
+const express = require('express');
+const router  = express.Router();
+
+const models  = require('../../../models/models.js');
+const error   = require('../../../lib/error.js');
 
 //Retrieve the list of meals.
 const getMeals = async ()=>{
@@ -14,7 +16,7 @@ const getMeals = async ()=>{
 		return meals.map((meal) => meal.dataValues);
 
 	}catch(error){
-		throw new Error('request error');
+		throw new Error(error.msg('QUERY'));
 	}
 
 }
@@ -25,7 +27,7 @@ router.get('/',(req,res)=>{
 	//get the list of meals.
 	getMeals()
 		.then((data) => res.status(200).json({"meals":data}))
-		.catch((err) => res.status(500).json(err));
+		.catch((err) => res.status(500).json({"aa":1}));
 
 });
 

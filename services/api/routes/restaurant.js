@@ -1,6 +1,8 @@
-const express     = require('express');
-const router      = express.Router();
-const models      = require('../../../models/models.js');
+const express  = require('express');
+const router   = express.Router();
+
+const models  = require('../../../models/models.js');
+const error   = require('../../../lib/error.js');
 
 //Retrieve the list of meals.
 const getAll = async ()=>{
@@ -14,7 +16,7 @@ const getAll = async ()=>{
 		return restaurants.map((rest) => rest.dataValues);
 
 	}catch(error){
-		throw new Error('request error');
+		throw new Error(error.msg('QUERY'));
 	}
 
 }
@@ -31,7 +33,7 @@ const getByRate = async (rateValue)=>{
 		return restaurants.map((rest) => rest.dataValues);
 
 	}catch(error){
-		throw new Error('request error');
+		throw new Error(error.msg('QUERY'));
 	}
 
 }
@@ -58,8 +60,7 @@ const calcRate = async (restaurantId)=>{
 			return null;
 
 	} catch(error){
-		console.log(error);
-		throw new Error(error);
+		throw new Error(error.msg('QUERY'));
 	}
 
 }
@@ -89,15 +90,27 @@ const newRate = async (restaurantId,userId,rateValue)=>{
 				//Update the restaunt rate.
 				await models.Restaurant.update({rate:newRate},{where:{id:restaurantId}});
 
-				return newRate;
+				return {
+					rate:{
+						id    : newRate.id,
+						value : newRate
+					}
+				};
 			}			
 
   	} else
-  		console.log('err',user,store);
+				return error.msg('BADREQ');
 
 	}catch(error){
-		throw new Error('request error');
+		throw new Error(error.msg('QUERY'));
 	}
+
+}
+
+//Validate new Rate request format.
+const validateFormatRate = (req)=>{
+
+	return ((req.body.restaurantId!=null)&&(req.body.userId)&&(req.body.rateValue));
 
 }
 
@@ -130,15 +143,15 @@ router.get('/rate/:value',(req,res)=>{
 router.post('/rate/',(req,res)=>{
 
 	//If the parametes are defined.
-	if ((req.body.restaurantId!=null)&&(req.body.userId)&&(req.body.rateValue)){
+	if (validateFormatRate(req)){
 
 		//Find by rate.
 		newRate(req.body.restaurantId,req.body.userId,req.body.rateValue)
-			.then((data) => res.status(200).json({"restaurants":data}))
-			.catch((err) => res.status(500).json(err));
+			.then((data) => res.status(200).json(data))
+			.catch((err) => res.status(500).json(error.msg('API')));
 
 	} else
-		res.status(400).json({"err":"error in request"});
+		res.status(400).json(error.msg('BADREQ'));
 
 });
 
