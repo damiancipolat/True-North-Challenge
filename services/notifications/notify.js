@@ -21,18 +21,20 @@ const enableMqClient = async ()=>{
   let logFile = global.config.services.notifications.logFile;
     
   //Consume events.
-  mqLib.consume(rabbit.ch,rabbit.q.queue,(data)=>{
+  mqLib.consume(rabbit.ch,rabbit.q.queue,(dataMsg)=>{
 
-  	if (data.routeKey=='order'){
-  		email.send(data)
-  			.then(()  => console.log('> Notification sent. email'))
-  			.catch((ee) => console.log('> Error in notification sent. email',ee));
+  	console.log('> Receive from queue',dataMsg);
+
+  	if (dataMsg.routeKey=='order'){
+  		email.send(dataMsg)
+  			.then(()      => console.log('> Notification sent. email'))
+  			.catch((err)  => console.log('> Error in notification sent. email',err));
   	}
 
-  	if (data.routeKey=='notif'){
-  		sms.send(data,logFile)
-  			.then(()  => console.log('> Notification sent. sms'))
-  			.catch((err) => console.log('> Error in notification sent. sms',err));
+  	if (dataMsg.routeKey=='notif'){
+  		sms.send(dataMsg,logFile)
+  			.then(()     => console.log('> Notification sent. sms'))
+  			.catch((err) => console.log('> Error in notification sent. sms'));
   	}
 
   });
