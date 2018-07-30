@@ -1,8 +1,11 @@
 # True-North-Challenge
 My solution for the True North Node.js Sr - Challenge
 
-### Install:
+To view architecture diagrams **[diagrams]**
 
+[diagrams]:https://github.com/damiancipolat/True-North-Challenge/blob/master/diagrams.md
+
+### Install:
 Install dependences, node modules:
 ```sh
 $ npm install
