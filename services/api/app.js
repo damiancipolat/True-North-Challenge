@@ -45,10 +45,16 @@ const boostrap = async ()=>{
   //Rabbitmq load.
   global.rabbit = {conn:null,ch:null,ex:null};
 
-  //Create connections, channels and exchange.
-  global.rabbit.conn = await mqLib.connection(global.config.rabbitmq.url);
-  global.rabbit.ch   = await mqLib.createChannel(global.rabbit.conn);
-  global.rabbit.ex   = await mqLib.newExchange(global.rabbit.ch);
+  try{
+    
+    //Create connections, channels and exchange.
+    global.rabbit.conn = await mqLib.connection(global.config.rabbitmq.url);
+    global.rabbit.ch   = await mqLib.createChannel(global.rabbit.conn);
+    global.rabbit.ex   = await mqLib.newExchange(global.rabbit.ch);
+
+  } catch(e){
+    console.log(errorLib.msg('MQ'));
+  }
 
   //Start and bind sockets.
   try{
@@ -67,7 +73,7 @@ const boostrap = async ()=>{
 //Start the server.
 boostrap().then((stat)=>{
 
-  console.log(errorLib.msg('OKSRV'));
+  console.log(errorLib.msgOk('OKSRV'));
 
 }).catch((err)=>{
 

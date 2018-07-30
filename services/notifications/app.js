@@ -1,20 +1,40 @@
-var amqp = require('amqplib/callback_api');
+const amqp      = require('amqplib/callback_api');
 
-amqp.connect('amqp://kewhjifg:d3-DSmkKl9mSzU8xYxORDF_guR7SHI_x@lion.rmq.cloudamqp.com/kewhjifg', function(err, conn) {
-  conn.createChannel(function(err, ch) {
-    var ex = 'notif-exchange';
+//Include custom libs.
+const configLib = require('../../lib/config.js');
+const errorLib  = require('../../lib/error.js');
+const notify    = require('./notify.js');
 
-    ch.assertExchange(ex, 'direct', {durable: false});
+//All the server start process in one async function.
+const boostrap = async ()=>{
 
-    ch.assertQueue('', {exclusive: true}, function(err, q) {
-      console.log(' [*] Waiting for logs. To exit press CTRL+C');
+  try{
 
-      ch.bindQueue(q.queue, ex, 'info');
-      
+    //Load config.
+    let configData = await configLib.getConfig('./config/config.json');
+    global.config  = configData;
 
-      ch.consume(q.queue, function(msg) {
-        console.log(" [x] %s: '%s'", msg.fields.routingKey, msg.content.toString());
-      }, {noAck: true});
-    });
-  });
+  } catch(error){
+
+    console.log(errorLib.msg('CONFIG'));
+    process.exit();
+
+  }
+
+  //Start rabbitmq client.
+  await notify.enableMqClient();
+
+  return true;
+
+}
+
+//Start the server.
+boostrap().then((stat)=>{
+
+  console.log(errorLib.msgOk('OKSRV'));
+
+}).catch((err)=>{
+
+  console.log(errorLib.msg('SERVER'),err);
+
 });

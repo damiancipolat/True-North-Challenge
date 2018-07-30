@@ -10,6 +10,11 @@
 	"rabbitmq":{
 		"url" : "amqp://kewhjifg:d3-DSmkKl9mSzU8xYxORDF_guR7SHI_x@lion.rmq.cloudamqp.com/kewhjifg"
 	},
+	"mailer":{
+		"user": "kikijs2018@gmail.com",
+		"pwd" : "kikijs2018ABC",
+		"type": "gmail"
+	},
 	"services":{
 		"api":{
 			"ip"      : "127.0.0.1",
@@ -17,7 +22,7 @@
 			"mapsKey" : "AIzaSyAVqBwjx92F0bRh8f9c9tY8XBnxyJTihYg"
 		},
 		"notifications":{
-			"logFile" : "log.txt"
+			"logFile" : "./services/notifications/log.txt"
 		}
 	}
 }
