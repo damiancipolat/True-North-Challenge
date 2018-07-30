@@ -11,6 +11,8 @@ const createSchema = async ()=>{
 	await models.Restaurant.sync({force: true});
 	await models.Rate.sync({force: true});  
 	await models.Meal.sync({force: true});
+  await models.Order.sync({force: true});
+  await models.OrderMeal.sync({force: true});
 
 	console.log('\n> Loading Data!!\n');
 

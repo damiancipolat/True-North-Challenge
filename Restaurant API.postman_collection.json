@@ -1,0 +1,131 @@
+{
+	"id": "06dff2e7-84cc-21e8-164c-70bfc3d274c1",
+	"name": "Restaurant API",
+	"description": "Collection of request to test restaurant api.",
+	"order": [
+		"e710b3eb-c67d-2270-88b9-ee1cd4224e33",
+		"b2eeed87-88a2-ed8e-1efe-cb59964c2259",
+		"da382bf6-b89a-1ef7-d3a0-8d3ea8a4cfaf",
+		"0a954dd7-82fe-58ed-63fa-9b8be7dfe04b"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1532893468029,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "0a954dd7-82fe-58ed-63fa-9b8be7dfe04b",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/x-www-form-urlencoded",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://127.0.0.1:8080/restaurant/rate/",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [
+				{
+					"key": "restaurantId",
+					"value": "3",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "userId",
+					"value": "3",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "rateValue",
+					"value": "10",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1532914133994,
+			"name": "Add new rate to a restaurant",
+			"description": "",
+			"collectionId": "06dff2e7-84cc-21e8-164c-70bfc3d274c1",
+			"responses": []
+		},
+		{
+			"id": "b2eeed87-88a2-ed8e-1efe-cb59964c2259",
+			"headers": "",
+			"headerData": [],
+			"url": "http://127.0.0.1:8080/restaurant/rate/100",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1532914138560,
+			"name": "Filter restaurant by Rate",
+			"description": "",
+			"collectionId": "06dff2e7-84cc-21e8-164c-70bfc3d274c1",
+			"responses": []
+		},
+		{
+			"id": "da382bf6-b89a-1ef7-d3a0-8d3ea8a4cfaf",
+			"headers": "",
+			"headerData": [],
+			"url": "http://127.0.0.1:8080/user/",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1532914136208,
+			"name": "Get the list of users",
+			"description": "",
+			"collectionId": "06dff2e7-84cc-21e8-164c-70bfc3d274c1",
+			"responses": []
+		},
+		{
+			"id": "e710b3eb-c67d-2270-88b9-ee1cd4224e33",
+			"headers": "",
+			"headerData": [],
+			"url": "http://127.0.0.1:8080/meal/",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1532914140964,
+			"name": "Get meal list",
+			"description": "",
+			"collectionId": "06dff2e7-84cc-21e8-164c-70bfc3d274c1",
+			"responses": []
+		}
+	]
+}

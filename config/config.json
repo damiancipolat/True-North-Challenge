@@ -4,13 +4,17 @@
 		"user"  : "snigmgei",
 		"db"    : "snigmgei",
 		"pwd"   : "BpbVMSMR4JlTQ-fGjBjhpiVxOlKanmHr",
-		"host " : "baasu.db.elephantsql.com",
+		"host"  : "baasu.db.elephantsql.com",
 		"type"  : "postgres"
+	},
+	"rabbitmq":{
+
 	},
 	"services":{
 		"api":{
-			"ip"    : "127.0.0.1",
-			"port"  : 8080			
+			"ip"      : "127.0.0.1",
+			"port" 	  : 8080,
+			"mapsKey" : "AIzaSyAVqBwjx92F0bRh8f9c9tY8XBnxyJTihYg"
 		},
 		"notifications":{
 
