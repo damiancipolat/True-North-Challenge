@@ -6,6 +6,8 @@ const models  = require('../../../models/models.js');
 const mapsApi = require('../../../lib/mapsApi/baseApi.js');
 const point   = require('../../../lib/mapsApi/point.js');
 
+Promise.Complete = r => Promise.all(r.map(p => p.catch ? p.catch(e => e) : p));
+
 //Validate format.
 const validRequest = (req)=>{
 
@@ -41,15 +43,15 @@ const newOrderMeal = (orderId,mealList)=>{
 	let prom = [];
 
 	mealList.forEach((mealId)=>{
-
+		console.log('save',orderId,mealId);
 		prom.push(models.OrderMeal.create({
-			order_id:orderId,
-			meal_id:mealId
+			order_id :orderId,
+			meal_id  :mealId
 		}));
 
 	});
 
-	return Promise.all(prom);
+	return Promise.Complete(prom);
 
 }
 
@@ -81,8 +83,8 @@ const newOrder = async (data)=>{
 			let orderNew = await models.Order.create({
 				address   : data.address,
 				latitude  : data.position.lat,
-				longitude : data.position.lng,
-				userId    : data.userId,
+				longitude : data.userId.lng,
+				user_id   : data.userId,
 				restaurant_id : data.restaurantId,
 				eta  : etaTime,
 				cost : orderCost
@@ -106,6 +108,27 @@ const newOrder = async (data)=>{
 	}
 
 }
+
+//Get the order by Id.
+const getOrder = async (id)=>{
+
+	let order = await models.Order.findById(id);
+	
+	if (order)
+		return order;
+	else
+		return {};
+
+}
+
+//Get the promise info.
+router.get('/:id',(req,res)=>{
+
+	getOrder(req.params.id)
+		.then((data) => res.status(200).json({"order":data}))
+		.catch((err) => res.status(500).json(err));
+
+})
 
 //Add new restaurant rate.
 router.post('/',(req,res)=>{
