@@ -79,21 +79,21 @@ Order.belongsTo(User, {
 
 //Order - meal model.
 const OrderMeal = db.define('order_meal',{
-  restaurant_id : Sequelize.INTEGER,
-  user_id       : Sequelize.INTEGER
+  order_id : Sequelize.INTEGER,
+  meal_id  : Sequelize.INTEGER
 });
 
 //Relations with the order.
-OrderMeal.belongsTo(Restaurant, {
-  foreignKey  : 'restaurant_id',
+OrderMeal.belongsTo(Meal, {
+  foreignKey  : 'meal_id',
   constraints : false,
-  as          : 'restaurant'
+  as          : 'meal'
 });
 
-OrderMeal.belongsTo(User, {
-  foreignKey  : 'user_id',
+OrderMeal.belongsTo(Order, {
+  foreignKey  : 'order_id',
   constraints : false,
-  as          : 'user'
+  as          : 'order'
 });
 
 module.exports.Meal       = Meal;

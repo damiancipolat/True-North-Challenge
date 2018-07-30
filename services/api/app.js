@@ -10,9 +10,7 @@ const api = require('./api.js');
 const configLib  = require('../../lib/config.js');
 
 //Include resource routes.
-const routeRestaurant = require('./routes/restaurant.js');
-const routeMeal       = require('./routes/meals.js');
-const routeUser       = require('./routes/user.js');
+const routes = require('./routes/routes.js');
 
 //Start Express-js
 const app    = express();
@@ -20,8 +18,7 @@ const server = http.createServer(app);
 
 //Add bodyparser and CORS.
 app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded());
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 app.use(api.CORS);
 
 try{
@@ -30,9 +27,10 @@ try{
   let config  = configLib.getConfig('./config/config.json');
 
   //Bind the api routes.
-  app.use('/restaurant/',routeRestaurant);
-  app.use('/meal/',routeMeal);
-  app.use('/user/',routeUser);
+  app.use('/restaurant/',routes.restaurant);
+  app.use('/meal/',routes.meal);
+  app.use('/user/',routes.user);
+  app.use('/order/',routes.order);
 
   //Inicio el server.
   app.listen(config.services.api.port,
