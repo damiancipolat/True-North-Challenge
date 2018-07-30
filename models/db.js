@@ -1,6 +1,6 @@
 const Sequelize = require('Sequelize');
 
-const config = global.config;
+const config    = global.config;
 
 const connection = ()=>{
 

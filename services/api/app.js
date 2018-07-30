@@ -17,13 +17,23 @@ app.use(api.CORS);
 //Include custom libs.
 const configLib = require('../../lib/config.js');
 const errorLib  = require('../../lib/error.js');
+const mqLib     = require('../../lib/rabbit.js');
 
-//Load config File.
-configLib.getConfig('./config/config.json').then((configData)=>{
+//All the server start process in one async function.
+const boostrap = async ()=>{
 
-  global.config = configData;
+  //Load config File.
+  try{
+    
+    let configData = await configLib.getConfig('./config/config.json');
+    global.config  = configData;
 
-  //Include resource routes.
+  } catch(error){
+    console.log(errorLib.msg('CONFIG'));
+    process.exit();
+  }
+
+  //Include resource routes and load routes.
   const routes = require('./routes/routes.js');
 
   //Bind the api routes.
@@ -31,7 +41,16 @@ configLib.getConfig('./config/config.json').then((configData)=>{
   app.use('/meal/',routes.meal);
   app.use('/user/',routes.user);
   app.use('/order/',routes.order);
+  
+  //Rabbitmq load.
+  global.rabbit = {conn:null,ch:null,ex:null};
 
+  //Create connections, channels and exchange.
+  global.rabbit.conn = await mqLib.connection(global.config.rabbitmq.url);
+  global.rabbit.ch   = await mqLib.createChannel(global.rabbit.conn);
+  global.rabbit.ex   = await mqLib.newExchange(global.rabbit.ch);
+
+  //Start and bind sockets.
   try{
 
     //Bind the socket.
@@ -41,9 +60,17 @@ configLib.getConfig('./config/config.json').then((configData)=>{
     console.log(errorLib.msg('SOCKET'));
   }
 
-}).catch((error)=>{  
-  console.log(error);
-  console.log(errorLib.msg('CONFIG'));
+  return true;
 
-});
+}
 
+//Start the server.
+boostrap().then((stat)=>{
+
+  console.log(errorLib.msg('OKSRV'));
+
+}).catch((err)=>{
+
+  console.log(errorLib.msg('SERVER'),err);
+
+})

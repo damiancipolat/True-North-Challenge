@@ -1,9 +1,10 @@
 //Include config.
 const configLib  = require('../lib/config.js');
-const models     = require('./models.js');
 
 //Create tables.
 const createSchema = async ()=>{
+
+  const models = require('./models.js');
 
 	console.log('\n> Creating tables !!\n');
 
@@ -23,6 +24,7 @@ const createSchema = async ()=>{
       name      : 'El palacio de la pizza',
       address   : 'Av. Corrientes 751, C1043AAH CABA',
       phone     : '011 4322-9762',
+      email     : 'test@gmail.com',
       latitude  : -34.6033082,
       longitude : -58.3772945,
       rate      : 0
@@ -31,6 +33,7 @@ const createSchema = async ()=>{
   await models.Restaurant.create({
     name      : 'Las cuartetas',
     address   : 'Av. Corrientes 838, C1043AAV CABA',
+    email     : 'test@gmail.com',    
     phone     : '011 4326-0171',
     latitude  : -34.6041581,
     longitude : -58.37853140000001,
@@ -40,6 +43,7 @@ const createSchema = async ()=>{
   await models.Restaurant.create({
     name      : 'La Americana',
     address   : 'Av. Callao 83, C1022AAA CABA',
+    email     : 'test@gmail.com',    
     phone     : '011 4371-0202',
     latitude  : -34.6082465,
     longitude : -58.3918225,
@@ -49,6 +53,7 @@ const createSchema = async ()=>{
   await models.Restaurant.create({
     name      : 'Gran Pizzería La Rey',
     address   : 'Av. Corrientes 965, C1009 CABA',
+    email     : 'test@gmail.com',    
     phone     : '011 4328-1928',
     latitude  : -34.6035271,
     longitude : -58.3804746,
@@ -58,6 +63,7 @@ const createSchema = async ()=>{
   await models.Restaurant.create({
     name      : 'Banchero',
     address   : 'Av. Corrientes 1300, C1043AAZ CABA',
+    email     : 'test@gmail.com',    
     phone     : '011 4382-3353',
     latitude  : -34.6041122,
     longitude : -58.3849166,
@@ -70,24 +76,28 @@ const createSchema = async ()=>{
   await models.User.create({
     firstName : 'Damian',
     lastName  : 'Cipolat',
+    phone     : '1566587382',
     email     : 'damian.cipolat@gmail.com'
   });
 
   await models.User.create({
     firstName : 'Bruce',
     lastName  : 'Wayne',
+    phone     : '1566587382',    
     email     : 'bruce.wayne@gmail.com'
   });
 
   await models.User.create({
     firstName : 'Homer',
     lastName  : 'Simpson',
+    phone     : '1566587382',    
     email     : 'hsimpson@gmail.com'
   });
 
   await models.User.create({
     firstName : 'Developer',
     lastName  : 'Developer',
+    phone     : '1566587382',    
     email     : 'developer@gmail.com'
   });
 
@@ -107,11 +117,25 @@ const createSchema = async ()=>{
 
 }
 
-//Create the schema.
-createSchema().then((stat)=>{
-	console.log('\n> Schema created OK.\n');
-	process.exit();
-}).catch((err)=>{
-	console.log('\n> Error creating schema.\n',err);
-	process.exit();
+//Load config.
+const loadConfig = async ()=>{
+
+  let configData = await configLib.getConfig('./config/config.json');
+  global.config  = configData;
+
+  await createSchema();
+  return true;
+
+}
+
+loadConfig().then(()=>{
+
+  console.log('\n> Schema created OK.\n');
+  process.exit();
+
+}).catch(()=>{
+
+  console.log('\n> Error creating schema.\n',err);
+  process.exit();    
+
 });

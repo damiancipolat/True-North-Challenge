@@ -6,6 +6,7 @@ const db        = require('./db.js').connection();
 const User = db.define('user',{
   firstName : Sequelize.STRING,
   lastName  : Sequelize.STRING,
+  phone     : Sequelize.STRING,
   email     : Sequelize.STRING
 });
 

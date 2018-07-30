@@ -5,10 +5,11 @@ const router  = express.Router();
 const models  = require('../../../models/models.js');
 
 //Custom libs
-const error   = require('../../../lib/error.js');
-const promise = require('../../../lib/promise.js');
-const mapsApi = require('../../../lib/mapsApi/baseApi.js');
-const point   = require('../../../lib/mapsApi/point.js');
+const error    = require('../../../lib/error.js');
+const promise  = require('../../../lib/promise.js');
+const mapsApi  = require('../../../lib/mapsApi/baseApi.js');
+const point    = require('../../../lib/mapsApi/point.js');
+const rabbitmq = require('../../../lib/rabbit.js');
 
 //Validate format.
 const validRequest = (req)=>{
@@ -57,6 +58,40 @@ const newOrderMeal = (orderId,mealList)=>{
 
 }
 
+//Build notification object.
+const buildNotifObj = (user,store,order,cost,eta)=>{
+
+	return {
+		restaurant:{					
+			email : store.email,
+			order :{
+				id   : order.id,
+				cost : cost						
+			}
+		},
+		client:{
+			phone : user.phone,
+			eta   : eta
+		}
+	};
+
+}
+
+//Send notifications.
+const sendNotification =  (msg,queueName)=>{
+
+	return new Promise((resolve,reject)=>{
+
+		let jsonMsg = JSON.stringify(msg);
+
+		rabbitmq.publishMsg(global.rabbit.ch,queueName,jsonMsg)
+			.then((data) => resolve(data))
+			.catch((err) => reject(err));
+
+	});
+
+}
+
 //Save new order.
 const newOrder = async (data)=>{
 
@@ -76,7 +111,7 @@ const newOrder = async (data)=>{
 			let destiny = new point(store.latitude,store.longitude);
 
 			//Calc ETA time.
-			let etaTime  = await new mapsApi('googleMaps',origin,destiny,'AIzaSyAVqBwjx92F0bRh8f9c9tY8XBnxyJTihYg').calc();
+			let etaTime  = await new mapsApi('googleMaps',origin,destiny,global.config.api.mapsKey).calc();
 					
 			//Calc the order cost.
 			let orderCost = await calcOrderCost(data.meals);
@@ -95,17 +130,27 @@ const newOrder = async (data)=>{
 			//Save the meal order list.
 			await newOrderMeal(orderNew.id,data.meals);
 
+			//Notif the new order.
+			let msg = buildNotifObj(user,store,orderNew,orderCost,etaTime);
+
+			//Send notification to the queue server.
+			await sendNotification(msg,'ORDER');
+			await sendNotification(msg,'NOTIF');			
+
 			//Response object.
 			return {
 				id   : orderNew.id,
 				eta  : etaTime,
 				cost : orderCost
-			}
-
+			}		
+			
   	} else
   			return error.msg('BADREQ');
 
+  	return 0;
+
 	}catch(error){
+
 		throw new Error(error.msg('QUERY'));
 	}
 
