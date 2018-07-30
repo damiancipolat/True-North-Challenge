@@ -48,9 +48,6 @@ To create all the tables that user the api service, you must run this command.
 ```sh
 #To create schema.
 $ npm run create-schema
-
-#To run Order messaging sevice.
-$ npm run notif
 ```
 
 ### Run:
