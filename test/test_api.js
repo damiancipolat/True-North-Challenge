@@ -10,7 +10,7 @@ const mapsApi  = require('../lib/mapsApi/baseApi.js')
 const Point    = require('../lib/mapsApi/point.js');
 const rabbitmq = require('../lib/rabbit.js');
 
-describe("Api Rest test cases", ()=>{
+describe("Api Rest service - TEST", ()=>{
 
   //Test db connection.
   describe("Database test", ()=>{
