@@ -8,7 +8,7 @@
 		"type"  : "postgres"
 	},
 	"rabbitmq":{
-
+		"url" : "amqp://kewhjifg:d3-DSmkKl9mSzU8xYxORDF_guR7SHI_x@lion.rmq.cloudamqp.com/kewhjifg"
 	},
 	"services":{
 		"api":{
@@ -17,7 +17,7 @@
 			"mapsKey" : "AIzaSyAVqBwjx92F0bRh8f9c9tY8XBnxyJTihYg"
 		},
 		"notifications":{
-
+			"logFile" : "log.txt"
 		}
 	}
 }
