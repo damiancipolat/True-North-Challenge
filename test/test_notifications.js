@@ -4,6 +4,7 @@ const config  = require('../config/config.json');
 global.config  = config;
 const rabbitmq = require('../lib/rabbit.js');
 const logger   = require('../lib/logger.js');
+const mailer   = require('../services/notifications/email.js');
 
 describe("Order messaging service - TEST", ()=>{
 
@@ -46,13 +47,23 @@ describe("Order messaging service - TEST", ()=>{
   });
 
   //Send email.
-  describe("Lof to file", ()=>{
+  describe("Send E-mail", ()=>{    
 
-    it("Log to file", (done)=>{
+    it("Sending email", (done)=>{
 
-      logger.log('> test write \r\n',config.services.notifications.logFile)
-        .then((eta) =>{
-          assert(eta!='');
+      let data = {
+        restaurant:{          
+          email : 'damian.cipolat@gmail.com',
+          order :{
+            id   : 1,
+            cost : 100           
+          }
+        }
+      };
+
+      mailer.send({content:JSON.stringify(data)})
+        .then((result) =>{
+          assert(result!='');
           done();
         })
         .catch((err) =>{

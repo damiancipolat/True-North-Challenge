@@ -7,17 +7,21 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "node ./lib/mapsApi/baseApi.js",
-    "api": "node ./services/api/app.js",
+    "test" : "./node_modules/.bin/mocha ./test/test_* -R spec",
+    "api"  : "node ./services/api/app.js",
+    "notif": "node ./services/notifications/app.js",
     "create-schema": "node ./models/schema.js"
   },
   "author": "Damian Cipolat",
   "license": "ISC",
   "dependencies": {
     "@google/maps": "^0.5.5",
+    "amqplib": "^0.5.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "google-distance-matrix": "^1.1.1",
+    "mocha": "^5.2.0",
+    "nodemailer": "^4.6.7",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.38.0"
