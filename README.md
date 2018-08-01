@@ -1,8 +1,11 @@
 # True-North-Challenge
 My solution for the True North Node.js Sr - Challenge
 
-### Install:
+- To view architecture **[diagrams]**.
 
+[diagrams]:https://github.com/damiancipolat/True-North-Challenge/blob/master/diagrams.md
+
+### Install:
 Install dependences, node modules:
 ```sh
 $ npm install
@@ -48,9 +51,6 @@ To create all the tables that user the api service, you must run this command.
 ```sh
 #To create schema.
 $ npm run create-schema
-
-#To run Order messaging sevice.
-$ npm run notif
 ```
 
 ### Run:
