@@ -71,7 +71,7 @@ describe("Order messaging service - TEST", ()=>{
           done();            
         });
 
-    });
+    }).timeout(5000);
 
   });
 

@@ -7,8 +7,9 @@
     "lib": "lib"
   },
   "scripts": {
-    "test" : "./node_modules/.bin/mocha ./test/test_* -R spec",
-    "api"  : "node ./services/api/app.js",
+    "test": "./node_modules/.bin/mocha ./test/test_* -R spec",
+    "test-api": "./node_modules/.bin/mocha ./test/test-server-api.js",
+    "api": "node ./services/api/app.js",
     "notif": "node ./services/notifications/app.js",
     "create-schema": "node ./models/schema.js"
   },
@@ -18,6 +19,7 @@
     "@google/maps": "^0.5.5",
     "amqplib": "^0.5.2",
     "body-parser": "^1.18.3",
+    "chai": "^4.1.2",
     "express": "^4.16.3",
     "google-distance-matrix": "^1.1.1",
     "mocha": "^5.2.0",
