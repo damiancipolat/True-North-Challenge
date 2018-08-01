@@ -72,7 +72,7 @@ $ npm run test
 ```
 
 
-To the api endpoints, check first that the server is runnig by default the url is 'http://127.0.0.1:8080'.
+To test the api endpoints, check first that the server is runnig by default the url is 'http://127.0.0.1:8080'.
 
 ```sh
 $ npm run test-api
